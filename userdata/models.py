@@ -25,7 +25,7 @@ class Images(models.Model):
     img = models.BinaryField(verbose_name='Изображение')
 
 
-class Areas(models.Model):
+class Area(models.Model):
     class Meta:
         db_table = 'pereval_areas'
 
