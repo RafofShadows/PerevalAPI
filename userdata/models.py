@@ -19,7 +19,7 @@ class Coords(models.Model):
 
 class Images(models.Model):
     date_added = models.DateTimeField(verbose_name='Дата добавления')
-    img = models.ImageField(verbose_name='Изображение')
+    img = models.FileField(verbose_name='Изображение')
 
 
 class Areas(models.Model):
@@ -36,15 +36,33 @@ class PassData(models.Model):
     other_titles = models.CharField(verbose_name='Альтернативное название', max_length=255, blank=True)
     connect = models.TextField(verbose_name='Что соединяет', blank=True)
     add_time = models.DateTimeField(verbose_name='Дата добавления')
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
-    coords = models.ForeignKey(Coords, on_delete=models.CASCADE)
-    level_winter = models.CharField()
+    user = models.ForeignKey(verbose_name='Пользователь', on_delete=models.CASCADE)
+    coords = models.ForeignKey(Coords, verbose_name='Координаты', on_delete=models.CASCADE)
+    level_winter = models.CharField(verbose_name='Уровень сложности зимой', max_length=100, default='')
+    level_spring = models.CharField(verbose_name='Уровень сложности весной', max_length=100, default='')
+    level_summer = models.CharField(verbose_name='Уровень сложности летом', max_length=100, default='')
+    level_autum = models.CharField(verbose_name='Уровень сложности осенью', max_length=100, default='')
+
+    STATUSES = [
+        ('new', 'Новый'),
+        ('pending', 'В работе'),
+        ('accepted', 'информация принята'),
+        ('rejected', 'информация не принята'),
+    ]
+    status = models.CharField(verbose_name='Статус модерации', max_length=100, choices=STATUSES, default='new')
     image = models.ManyToManyField(Images, through='PerevalImages')
 
 
 class PerevalImages(models.Model):
     pereval = models.ForeignKey(PassData, on_delete=models.CASCADE)
-    image = models.ForeignKey(Images, on_delete=models.CASCADE())
+    image = models.ForeignKey(Images, on_delete=models.CASCADE)
+
+
+class Activities(models.Model):
+    class Meta:
+        db_table = 'spr_activities_types'
+
+    title = models.CharField(verbose_name='Способ передвижения', max_length=100)
 
 
 
