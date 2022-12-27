@@ -18,11 +18,17 @@ class Coords(models.Model):
 
 
 class Images(models.Model):
+    class Meta:
+        db_table = 'pereval_images'
+
     date_added = models.DateTimeField(verbose_name='Дата добавления')
-    img = models.FileField(verbose_name='Изображение')
+    img = models.BinaryField(verbose_name='Изображение')
 
 
 class Areas(models.Model):
+    class Meta:
+        db_table = 'pereval_areas'
+
     parent = models.IntegerField(default=0)
     title = models.CharField(verbose_name='Наименование', max_length=255)
 
@@ -36,7 +42,7 @@ class PassData(models.Model):
     other_titles = models.CharField(verbose_name='Альтернативное название', max_length=255, blank=True)
     connect = models.TextField(verbose_name='Что соединяет', blank=True)
     add_time = models.DateTimeField(verbose_name='Дата добавления')
-    user = models.ForeignKey(verbose_name='Пользователь', on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     coords = models.ForeignKey(Coords, verbose_name='Координаты', on_delete=models.CASCADE)
     level_winter = models.CharField(verbose_name='Уровень сложности зимой', max_length=100, default='')
     level_spring = models.CharField(verbose_name='Уровень сложности весной', max_length=100, default='')
