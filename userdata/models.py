@@ -33,6 +33,22 @@ class Area(models.Model):
     title = models.CharField(verbose_name='Наименование', max_length=255)
 
 
+class Level(models.Model):
+    LEVELS = [
+        ('1А', '1А'),
+        ('1Б', '1Б'),
+        ('2А', '2А'),
+        ('2Б', '2Б'),
+        ('3А', '3А'),
+        ('3Б', '3Б'),
+    ]
+
+    winter = models.CharField(verbose_name='Категория трудности зимой', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    spring = models.CharField(verbose_name='Категория трудности весной', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    summer = models.CharField(verbose_name='Категория трудности летом', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    autumn = models.CharField(verbose_name='Категория трудности осенью', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+
+
 class PassData(models.Model):
     class Meta:
         db_table = 'pereval_added'
@@ -44,10 +60,7 @@ class PassData(models.Model):
     add_time = models.DateTimeField(verbose_name='Дата добавления')
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     coords = models.ForeignKey(Coords, verbose_name='Координаты', on_delete=models.CASCADE)
-    level_winter = models.CharField(verbose_name='Уровень сложности зимой', max_length=100, default='')
-    level_spring = models.CharField(verbose_name='Уровень сложности весной', max_length=100, default='')
-    level_summer = models.CharField(verbose_name='Уровень сложности летом', max_length=100, default='')
-    level_autum = models.CharField(verbose_name='Уровень сложности осенью', max_length=100, default='')
+    levels = models.ForeignKey(Level, verbose_name='Категория трудности', on_delete=models.CASCADE)
 
     STATUSES = [
         ('new', 'Новый'),
