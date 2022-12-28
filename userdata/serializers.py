@@ -1,3 +1,6 @@
+import io
+
+from django.core.files.images import ImageFile
 from rest_framework import serializers
 
 from .models import User, Coords, Area, Image, PassData, Level
@@ -34,22 +37,26 @@ class AreaSerializer(serializers.ModelSerializer):
         model = Area
         fields = '__all__'
 
+    # def save(self, **kwargs):
+    #     self.is_valid()
+    #     area = Area.objects.filter(title=self.validated_data.get('title'))
+    #     if area.exists():
+    #         return area.first()
+    #     else:
+    #         return Area.objects.create(
+    #             parent=self.validated_data.get('parent'),
+    #             title=self.validated_data.get('title'),
+    #         )
+
+
+class ImageSerializer(serializers.Serializer):
+    image_char = serializers.CharField(max_length=20000000)
+    title = serializers.CharField()
+
     def save(self, **kwargs):
-        self.is_valid()
-        area = Area.objects.filter(title=self.validated_data.get('title'))
-        if area.exists():
-            return area.first()
-        else:
-            return Area.objects.create(
-                parent=self.validated_data.get('parent'),
-                title=self.validated_data.get('title'),
-            )
-
-
-class ImageSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Image
-        fields = '__all__'
+        image_bytes = bytes.fromhex(self.validated_data['image_char'])
+        image = ImageFile(io.BytesIO(image_bytes), name=f'{self.validated_data["title"]}.jpg')
+        return Image.objects.create(image=image, title=self.validated_data["title"])
 
 
 class PassDataSerializer(serializers.ModelSerializer):

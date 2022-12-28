@@ -58,7 +58,7 @@ class PassData(models.Model):
     title = models.CharField('Название', max_length=255)
     other_titles = models.CharField(verbose_name='Альтернативное название', max_length=255, blank=True)
     area = models.ForeignKey(Area, verbose_name='Горный хребет', blank=True, null=True, on_delete=models.SET_NULL)
-    add_time = models.DateTimeField(verbose_name='Дата добавления')
+    add_time = models.DateTimeField(verbose_name='Дата добавления', auto_now_add=True)
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     coords = models.ForeignKey(Coords, verbose_name='Координаты', on_delete=models.CASCADE)
     levels = models.ForeignKey(Level, verbose_name='Категория трудности', on_delete=models.CASCADE)
