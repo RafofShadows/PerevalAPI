@@ -56,6 +56,7 @@ class PassDataSerializer(serializers.ModelSerializer):
     class Meta:
         model = PassData
         fields = '__all__'
+        depth = 1
 
 
 class LevelSerializer(serializers.ModelSerializer):

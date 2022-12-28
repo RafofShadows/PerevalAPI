@@ -21,8 +21,9 @@ class Image(models.Model):
     class Meta:
         db_table = 'pereval_images'
 
-    date_added = models.DateTimeField(verbose_name='Дата добавления')
+    date_added = models.DateTimeField(verbose_name='Дата добавления', auto_now_add=True)
     img = models.BinaryField(verbose_name='Изображение')
+    title = models.CharField(verbose_name='Название', max_length=150)
 
 
 class Area(models.Model):
