@@ -17,7 +17,7 @@ class Coords(models.Model):
     height = models.IntegerField(verbose_name='Высота', default=0)
 
 
-class Images(models.Model):
+class Image(models.Model):
     class Meta:
         db_table = 'pereval_images'
 
@@ -30,7 +30,7 @@ class Area(models.Model):
         db_table = 'pereval_areas'
 
     parent = models.IntegerField(default=0)
-    title = models.CharField(verbose_name='Наименование', max_length=255)
+    title = models.CharField(verbose_name='Наименование', max_length=255, unique=True)
 
 
 class Level(models.Model):
@@ -69,12 +69,12 @@ class PassData(models.Model):
         ('rejected', 'информация не принята'),
     ]
     status = models.CharField(verbose_name='Статус модерации', max_length=100, choices=STATUSES, default='new')
-    image = models.ManyToManyField(Images, through='PerevalImages')
+    image = models.ManyToManyField(Image, through='PerevalImages')
 
 
 class PerevalImages(models.Model):
     pereval = models.ForeignKey(PassData, on_delete=models.CASCADE)
-    image = models.ForeignKey(Images, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
 
 class Activities(models.Model):

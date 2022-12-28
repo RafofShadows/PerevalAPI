@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from .models import User, Coords, Area, Images, PassData, Level
+from .models import User, Coords, Area, Image, PassData, Level
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -34,10 +34,21 @@ class AreaSerializer(serializers.ModelSerializer):
         model = Area
         fields = '__all__'
 
+    def save(self, **kwargs):
+        self.is_valid()
+        area = Area.objects.filter(title=self.validated_data.get('title'))
+        if area.exists():
+            return area.first()
+        else:
+            return Area.objects.create(
+                parent=self.validated_data.get('parent'),
+                title=self.validated_data.get('title'),
+            )
 
-class ImagesSerializer(serializers.ModelSerializer):
+
+class ImageSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Images
+        model = Image
         fields = '__all__'
 
 
