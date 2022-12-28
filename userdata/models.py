@@ -17,20 +17,37 @@ class Coords(models.Model):
     height = models.IntegerField(verbose_name='Высота', default=0)
 
 
-class Images(models.Model):
+class Image(models.Model):
     class Meta:
         db_table = 'pereval_images'
 
-    date_added = models.DateTimeField(verbose_name='Дата добавления')
+    date_added = models.DateTimeField(verbose_name='Дата добавления', auto_now_add=True)
     img = models.BinaryField(verbose_name='Изображение')
+    title = models.CharField(verbose_name='Название', max_length=150)
 
 
-class Areas(models.Model):
+class Area(models.Model):
     class Meta:
         db_table = 'pereval_areas'
 
     parent = models.IntegerField(default=0)
-    title = models.CharField(verbose_name='Наименование', max_length=255)
+    title = models.CharField(verbose_name='Наименование', max_length=255, unique=True)
+
+
+class Level(models.Model):
+    LEVELS = [
+        ('1А', '1А'),
+        ('1Б', '1Б'),
+        ('2А', '2А'),
+        ('2Б', '2Б'),
+        ('3А', '3А'),
+        ('3Б', '3Б'),
+    ]
+
+    winter = models.CharField(verbose_name='Категория трудности зимой', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    spring = models.CharField(verbose_name='Категория трудности весной', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    summer = models.CharField(verbose_name='Категория трудности летом', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
+    autumn = models.CharField(verbose_name='Категория трудности осенью', max_length=2, choices=LEVELS, default=LEVELS[0], blank=True)
 
 
 class PassData(models.Model):
@@ -40,14 +57,11 @@ class PassData(models.Model):
     beauty_title = models.CharField(max_length=100)
     title = models.CharField('Название', max_length=255)
     other_titles = models.CharField(verbose_name='Альтернативное название', max_length=255, blank=True)
-    connect = models.TextField(verbose_name='Что соединяет', blank=True)
-    add_time = models.DateTimeField(verbose_name='Дата добавления')
+    area = models.ForeignKey(Area, verbose_name='Горный хребет', blank=True, null=True, on_delete=models.SET_NULL)
+    add_time = models.DateTimeField(verbose_name='Дата добавления', auto_now_add=True)
     user = models.ForeignKey(User, verbose_name='Пользователь', on_delete=models.CASCADE)
     coords = models.ForeignKey(Coords, verbose_name='Координаты', on_delete=models.CASCADE)
-    level_winter = models.CharField(verbose_name='Уровень сложности зимой', max_length=100, default='')
-    level_spring = models.CharField(verbose_name='Уровень сложности весной', max_length=100, default='')
-    level_summer = models.CharField(verbose_name='Уровень сложности летом', max_length=100, default='')
-    level_autum = models.CharField(verbose_name='Уровень сложности осенью', max_length=100, default='')
+    levels = models.ForeignKey(Level, verbose_name='Категория трудности', on_delete=models.CASCADE)
 
     STATUSES = [
         ('new', 'Новый'),
@@ -56,12 +70,12 @@ class PassData(models.Model):
         ('rejected', 'информация не принята'),
     ]
     status = models.CharField(verbose_name='Статус модерации', max_length=100, choices=STATUSES, default='new')
-    image = models.ManyToManyField(Images, through='PerevalImages')
+    image = models.ManyToManyField(Image, through='PerevalImages')
 
 
 class PerevalImages(models.Model):
     pereval = models.ForeignKey(PassData, on_delete=models.CASCADE)
-    image = models.ForeignKey(Images, on_delete=models.CASCADE)
+    image = models.ForeignKey(Image, on_delete=models.CASCADE)
 
 
 class Activities(models.Model):
