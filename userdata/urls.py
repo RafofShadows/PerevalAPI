@@ -2,7 +2,7 @@ from django.urls import path, include
 from rest_framework import routers
 
 from userdata.views import submit_data, LevelViewSet, UserViewSet, PassDataViewSet, CoordsViewSet, ImageViewSet, \
-    AreaViewSet
+    AreaViewSet, get_pass_data
 
 router = routers.DefaultRouter()
 
@@ -16,5 +16,6 @@ router.register(r'areas', AreaViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
-    path('submitdata/', submit_data)
+    path('submitdata/', submit_data),
+    path('submitdata_get/<int:id>', get_pass_data)
 ]
