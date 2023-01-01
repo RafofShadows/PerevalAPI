@@ -12,7 +12,6 @@ from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
 
-# Create your models here.
 class User(models.Model):
     email = models.EmailField(verbose_name='Электронная почта', unique=True)
     name = models.CharField(verbose_name='Имя', max_length=100)
