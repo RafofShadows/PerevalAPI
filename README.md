@@ -7,7 +7,7 @@ pip install requirements.txt
 ```
 
 ## Стурктура базы данных
-'''
+```
 from django.db import models
 from phonenumber_field.modelfields import PhoneNumberField
 
@@ -93,10 +93,10 @@ class Activities(models.Model):
 
     title = models.CharField(verbose_name='Способ передвижения', max_length=100)
 
-'''
+```
 
 ## Реализован Rest API включающий в себя методы POST, GET и PATCH
-'''
+```
 from django.http import HttpResponse
 from django.views.decorators.csrf import csrf_exempt
 from rest_framework import viewsets, status
@@ -382,12 +382,12 @@ def patch_pass_data(request, id):
                 status=status.HTTP_404_NOT_FOUND,
             )
 
-'''
+```
 
 ## Описание методов
 ### Метод POST
 Принимает JSON следующего вида:
-'''
+```
 {
   "beauty_title": "пер. ",
   "title": "Пхия",
@@ -414,7 +414,7 @@ def patch_pass_data(request, id):
  
    images: [{data:"<картинка1>", title:"Седловина"}, {data:"<картинка>", title:"Подъём"}]
 }
-'''
+```
 И создает новую запись в базе.
 ### Метод GET
 Принимает id перевала и, если перевал с таким id существует, возвращает его данные в виде, описанном выше.
